@@ -310,7 +310,12 @@ bool HeliCanvas::setCurrentTime(const Seiscomp::Core::Time &time) {
 
 	if ( abs(shift) >= _rows.size() ) {
 		for ( int i = 0; i < _rows.size(); ++i ) {
+		    #ifdef __APPLE__
+	        // Avoids error: ambiguous conversion for functional-style cast from 'time_t' (aka 'long') to 'Core::Time'
+			_rows[_rows.size()-1-i].time = Core::Time(newEndSeconds - i*_rowTimeSpan, 0);
+			#else
 			_rows[_rows.size()-1-i].time = Core::Time(newEndSeconds - i*_rowTimeSpan);
+            #endif			
 			_rows[_rows.size()-1-i].update();
 		}
 

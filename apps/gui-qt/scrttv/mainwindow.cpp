@@ -1997,7 +1997,12 @@ void MainWindow::createOrigin(Gui::RecordViewItem* item, Core::Time time) {
 	origin->setLongitude(dlg.longitude());
 	origin->setLatitude(dlg.latitude());
 	origin->setDepth(DataModel::RealQuantity(dlg.depth()));
-	origin->setTime(Core::Time(dlg.getTime_t()));
+	#ifdef __APPLE__
+	// Avoids error: ambiguous conversion for functional-style cast from 'time_t' (aka 'long') to 'Core::Time'
+	origin->setTime(Core::Time(dlg.getTime_t(), 0));
+	#else
+	origin->setTime(Core::Time(dlg.getTime_t(), 0));
+	#endif
 
 	//Seiscomp::DataModel::ArtificialOriginMessage message(origin);
 	//SCApp->sendMessage("GUI", &message);

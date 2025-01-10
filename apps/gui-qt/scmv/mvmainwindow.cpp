@@ -1024,7 +1024,13 @@ void MvMainWindow::sendArtificialOrigin(const QPoint& pos) {
 	origin->setLongitude(dialog.longitude());
 	origin->setLatitude(dialog.latitude());
 	origin->setDepth(DataModel::RealQuantity(dialog.depth()));
-	origin->setTime(Core::Time(dialog.getTime_t()));
+	
+	#ifdef __APPLE__
+	    // Avoids error: ambiguous conversion for functional-style cast from 'time_t' (aka 'long') to 'Core::Time'
+	    origin->setTime(Core::Time(dialog.getTime_t(), 0));
+	#else
+	    origin->setTime(Core::Time(dialog.getTime_t()));
+	#endif
 
 	SCApp->sendCommand(Gui::CM_OBSERVE_LOCATION, "", origin);
 }

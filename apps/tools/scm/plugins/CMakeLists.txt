@@ -9,7 +9,19 @@ MAKE_MONITOR_PLUGIN(memailplugin)
 MAKE_MONITOR_PLUGIN(mtextplugin)
 
 # Optional Ncurses package
-FIND_PACKAGE(Ncurses)
+IF(APPLE)
+    # Set this variable to TRUE before calling find_package(Curses) if the ncurses implementation functionality is specifically required.
+    SET(CURSES_NEED_NCURSES TRUE)
+    FIND_PACKAGE(Curses)
+    IF(Curses_FOUND)
+        SET(NCURSES_FOUND TRUE)
+        SET(NCURSES_INCLUDE_DIR ${CURSES_INCLUDE_DIRS})
+        SET(NCURSES_LIBRARY ${CURSES_LIBRARIES})
+    ENDIF()
+ELSE()
+    FIND_PACKAGE(Ncurses)
+ENDIF()
+
 
 IF (NCURSES_FOUND)
     SET(MNCURSES_PLUGIN mncursesplugin)
